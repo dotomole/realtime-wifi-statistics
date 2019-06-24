@@ -1,3 +1,6 @@
+'''
+Thomas Di Pietro 24/5/19
+'''
 import subprocess
 import os
 import sys
@@ -40,12 +43,6 @@ def getSigStrength():
     output = os.popen(cmd).read().split('\n')
     signal = output[0].split(": ")
     return signal[1]
-
-# def getSigStrength2():
-#     cmd = 'netsh wlan show networks mode=bssid'
-#     output = os.popen(cmd).read().split('\n')
-#     signal = output[9].split(": ")
-#     return signal[1]
 
 def display():
     start_time = time.time()
