@@ -7,13 +7,19 @@ import sys
 import time
 from tkinter import *
 
+def connected():
+    cmd = 'netsh wlan show interfaces | findstr /i \"State\"'
+    output = os.popen(cmd).read().split('\n')
+    signal = output[0].split(": ")
+    if signal[1] == 'connected':
+        return True
+    else:
+        return False
+
 def getDefGateway():
     cmd = 'ipconfig | findstr /i \"Gateway\"'
     output = os.popen(cmd).read().split(' ')
     return output[15]
-
-# Here so it only has to get once for getPing()
-defGateway = getDefGateway()
 
 def getSigStrength():
     cmd = 'netsh wlan show interfaces | findstr /i \"Signal\"'
@@ -45,21 +51,30 @@ def updatePing():
     root.after(100, updatePing)
 
 root = Tk()
+root.title('Wi-Fi Statistics')
+root.geometry("300x300")
 labelfont = ('verdana', 30, 'bold')
 
-ssid = Label(root, text=getSSID())
-sigLabel = Label(root, text=getSigStrength())
-pingLabel = Label(root, text=getPing())
+if connected():
+    defGateway = getDefGateway()
 
-ssid.config(font=labelfont, height=2, width=10)
-pingLabel.config(font=labelfont, height=2, width=10)
-sigLabel.config(font=labelfont, height=2, width=10)
+    ssid = Label(root, text=getSSID())
+    sigLabel = Label(root, text=getSigStrength())
+    pingLabel = Label(root, text=getPing())
 
-ssid.pack()
-sigLabel.pack()
-pingLabel.pack()
+    ssid.config(font=labelfont, height=2, width=10)
+    pingLabel.config(font=labelfont, height=2, width=10)
+    sigLabel.config(font=labelfont, height=2, width=10)
 
-root.title('Wi-Fi Statistics')
-root.after(1, updateSig)
-root.after(1, updatePing)
+    ssid.pack()
+    sigLabel.pack()
+    pingLabel.pack()
+
+    root.after(1, updateSig)
+    root.after(1, updatePing)
+else:
+    disc = Label(root, text="Wi-Fi disconnected.")
+    disc.config(font=('verdana',10,'bold'), height=2, width=30)
+    disc.pack()
+
 root.mainloop()

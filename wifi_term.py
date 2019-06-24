@@ -6,22 +6,19 @@ import os
 import sys
 import time
 
-def main():
-    print("-------------------------------------------------")
-    print("|            Wi-Fi Statistics v0.01             |")
-    print("-------------------------------------------------")
-    print("| This program shows the wi-fi signal strength, |")
-    print("| and ping to the default gateway in realtime.  |")
-    print("-------------------------------------------------")
-    print("Wi-Fi: "+getSSID())
-    display()
+def connected():
+    cmd = 'netsh wlan show interfaces | findstr /i \"State\"'
+    output = os.popen(cmd).read().split('\n')
+    signal = output[0].split(": ")
+    if signal[1] == 'connected':
+        return True
+    else:
+        return False
 
 def getDefGateway():
     cmd = 'ipconfig | findstr /i \"Gateway\"'
     output = os.popen(cmd).read().split(' ')
     return output[15]
-
-defGateway = getDefGateway()
 
 def getPing():
     try:
@@ -54,5 +51,15 @@ def display():
         time.sleep(0.1)
         sys.stdout.flush()
 
-if __name__ == '__main__':
-    main()
+if connected():
+    print("-------------------------------------------------")
+    print("|            Wi-Fi Statistics v0.01             |")
+    print("-------------------------------------------------")
+    print("| This program shows the wi-fi signal strength, |")
+    print("| and ping to the default gateway in realtime.  |")
+    print("-------------------------------------------------")
+    defGateway = getDefGateway()
+    print("Wi-Fi: "+getSSID())
+    display()
+else:
+    print("Wi-Fi disconnected - restart program.")
