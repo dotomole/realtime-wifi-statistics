@@ -1,4 +1,4 @@
-# Realtime Wi-Fi Statistics
+# Realtime Wi-Fi Statistics (Windows)
 
 This program allows you to view wi-fi statistics in realtime. Something I just made for myself really, useful for walking around your home/workplace and seeing where the signal is best.
 
