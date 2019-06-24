@@ -1,10 +1,10 @@
 # Realtime Wi-Fi Statistics
 
-This program allows you to view wi-fi statistics in realtime.
+This program allows you to view wi-fi statistics in realtime. Something I just made for myself really, useful for walking around your home/workplace and seeing where the signal is best.
 
-Usage:
-Terminal version: `py wifi_term.py`
-GUI version: `py wifi.py`
+Usage:<br/>
+Terminal version: `py wifi_term.py`<br/>
+GUI version: `py wifi.py`<br/>
 
 Current version shows:
 - SSID
