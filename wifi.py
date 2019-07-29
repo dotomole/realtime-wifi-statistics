@@ -17,15 +17,24 @@ def connected():
         return False
 
 def getDefGateway():
-    cmd = 'ipconfig | findstr /i \"Gateway\"'
+    cmd = 'netsh interface ip show addresses | findstr /i \"Gateway\"'
     output = os.popen(cmd).read().split(' ')
-    return output[15]
+    return output[27]
 
 def getSigStrength():
     cmd = 'netsh wlan show interfaces | findstr /i \"Signal\"'
     output = os.popen(cmd).read().split('\n')
     signal = output[0].split(": ")
     return signal[1]
+
+# Alternative method for signal strength
+# Gives seemingly less stable results
+
+# def getSigStrength2():
+#     cmd = 'netsh wlan show networks mode=bssid'
+#     output = os.popen(cmd).read().split('\n')
+#     signal = output[9].split(": ")
+#     return signal[1]
 
 def getSSID():
     cmd = 'netsh wlan show interfaces | findstr /i \"SSID\"'
@@ -51,30 +60,42 @@ def updatePing():
     root.after(100, updatePing)
 
 root = Tk()
-root.title('Wi-Fi Statistics')
-root.geometry("300x300")
-labelfont = ('verdana', 30, 'bold')
+root.title('Router Wi-Fi Statistics')
+root.geometry("300x400")
+root.resizable(False, False)
+
+titleFont = ('verdana', 10)
+resultFont = ('verdana', 30, 'bold')
 
 if connected():
     defGateway = getDefGateway()
 
+    ssidTitle = Label(root, text="SSID")
+    sigTitle = Label(root, text="Signal Strength")
+    pingTitle = Label(root, text="Ping to "+defGateway+"(Router)")
     ssid = Label(root, text=getSSID())
     sigLabel = Label(root, text=getSigStrength())
     pingLabel = Label(root, text=getPing())
 
-    ssid.config(font=labelfont, height=2, width=10)
-    pingLabel.config(font=labelfont, height=2, width=10)
-    sigLabel.config(font=labelfont, height=2, width=10)
+    ssidTitle.config(font=titleFont, height=2, width=20)
+    sigTitle.config(font=titleFont, height=2, width=20)
+    pingTitle.config(font=titleFont, height=2, width=20)
+    ssid.config(font=resultFont, height=2, width=10)
+    pingLabel.config(font=resultFont, height=2, width=10)
+    sigLabel.config(font=resultFont, height=2, width=10)
 
+    ssidTitle.pack()
     ssid.pack()
+    sigTitle.pack()
     sigLabel.pack()
+    pingTitle.pack()
     pingLabel.pack()
 
     root.after(1, updateSig)
     root.after(1, updatePing)
 else:
     disc = Label(root, text="Wi-Fi disconnected.")
-    disc.config(font=('verdana',10,'bold'), height=2, width=30)
+    disc.config(font=titleFont, height=2, width=30)
     disc.pack()
 
 root.mainloop()
